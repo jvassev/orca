@@ -41,6 +41,7 @@ import { getWorkspaceCleanupRunner } from '../../workspaces/cleanup/workspace-cl
 import { closeBrowserExtensionProfileDocumentStores } from '../../browser/extensions/profile-storage/browser-extension-profile-document-store'
 import { shutdownWatchersOnce } from './filesystem-watcher-quit-shutdown'
 import { flushBrowserSessionCookiesOnQuit } from '../../browser/cookies/session-restore/browser-session-cookie-restore'
+import { stopAllVsCodeServeWeb } from '../../external-editors/vscode-serve-web'
 
 // First will-quit pass awaits teardown; the re-fired pass must exit without starting writes again.
 let daemonDisconnectDone = false
@@ -51,6 +52,7 @@ const REF_MAINTENANCE_QUIT_DEADLINE_MS = 2_000
 
 function installBeforeQuitHandler(): void {
   app.on('before-quit', (event: Event) => {
+    stopAllVsCodeServeWeb()
     if (event.defaultPrevented) {
       return
     }

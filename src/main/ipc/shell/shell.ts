@@ -23,6 +23,7 @@ import {
 import { resolveRemoteSshEditorLaunchSpec } from '../../external-editors/remote-ssh-editor-launch'
 import { resolveOpenInEditorCommand } from '../../external-editors/open-in-editor-command'
 import { openPathInDefaultApp } from '../../external-editors/default-app-location-open'
+import { registerEmbeddedVsCodeHandlers } from './shell-embedded-vscode'
 import { toSshExecutionHostId } from '../../../shared/execution-host/execution-host'
 import {
   isEditorSshHostForOwner,
@@ -170,6 +171,8 @@ export function registerShellHandlers(
     (_event, request: ShellOpenExternalEditorRequest): Promise<ShellOpenExternalEditorResult> =>
       openInExternalEditor(store, request, listRuntimeEnvironments)
   )
+
+  registerEmbeddedVsCodeHandlers()
 
   ipcMain.handle('shell:openUrl', (_event, rawUrl: string) => {
     let parsed: URL

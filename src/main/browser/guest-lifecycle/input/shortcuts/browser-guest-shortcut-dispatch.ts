@@ -31,6 +31,7 @@ export type GuestShortcutForwardContext = {
   getKeybindings?: () => KeybindingOverrides | undefined
   resolveWorktreeId?: (browserTabId: string) => string | null
   resolveWorkspaceId?: (browserTabId: string) => string | null
+  isChromeless?: (browserTabId: string) => boolean
   forwardBrowserPageZoom: (event: Electron.Event, direction: BrowserPageZoomDirection) => void
   /** False for plugin frames: no address bar, history, find or page zoom, so zoom and the
    *  sidebar chords go to Orca, and Close closes the active tab rather than a browser source. */
@@ -52,6 +53,7 @@ export function forwardGuestShortcutInput(
     getKeybindings,
     resolveWorktreeId,
     resolveWorkspaceId,
+    isChromeless,
     forwardBrowserPageZoom
   } = ctx
   const page = ctx.browserPage !== false
@@ -145,6 +147,14 @@ export function forwardGuestShortcutInput(
     renderer.send('ui:showBrowserHistory', { browserPageId: browserTabId })
   } else if (
     page &&
+    isChromeless?.(browserTabId) &&
+    (keybindingMatchesAction('browser.hardReload', input, process.platform, keybindings) ||
+      keybindingMatchesAction('browser.reload', input, process.platform, keybindings))
+  ) {
+    // Embedded VS Code keeps reload chords (terminal reverse-search); its tab menu has Reload.
+    return false
+  } else if (
+    page &&
     keybindingMatchesAction('browser.hardReload', input, process.platform, keybindings)
   ) {
     // The renderer owns the parked webview used for reload.
@@ -185,6 +195,10 @@ export function forwardGuestShortcutInput(
       direction: 'forward'
     })
   } else if (keybindingMatchesAction('tab.close', input, process.platform, keybindings)) {
+    if (isChromeless?.(browserTabId)) {
+      // Let chromeless guests (e.g. embedded VS Code) handle their own close shortcuts.
+      return false
+    }
     if (isFloatingGuest) {
       renderer.send('ui:closeFloatingItem', { sourceId: browserTabId })
     } else if (page) {
@@ -205,6 +219,10 @@ export function forwardGuestShortcutInput(
   } else if (action?.type === 'toggleWorktreePalette') {
     renderer.send('ui:toggleWorktreePalette')
   } else if (action?.type === 'openQuickOpen') {
+    if (isChromeless?.(browserTabId)) {
+      // Embedded VS Code keeps Mod+P for its own Quick Open.
+      return false
+    }
     renderer.send('ui:openQuickOpen')
   } else if (action?.type === 'toggleQuickCommandsMenu') {
     renderer.send('ui:toggleQuickCommandsMenu')

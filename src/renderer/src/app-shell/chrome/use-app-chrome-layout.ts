@@ -1,7 +1,10 @@
 import { useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { SYNC_FIT_PANES_EVENT } from '@/constants/terminal'
-import { canShowRightSidebarForView } from '@/components/right-sidebar/visibility/right-sidebar-visibility'
+import {
+  canShowRightSidebarForView,
+  selectChromelessBrowserTabActive
+} from '@/components/right-sidebar/visibility/right-sidebar-visibility'
 import { resolveLeftSidebarStyleVariables } from '@/app-shell/appearance/left-sidebar-appearance'
 import { resolveLeftTitlebarChromeLayout } from '@/app-shell/chrome/titlebar-left-chrome'
 import { selectWorktreeCreationSurfaceShown } from '@/lib/workspace/creation/worktree-creation-surface'
@@ -20,6 +23,7 @@ export function useAppChromeLayout() {
   const activeView = useAppStore((s) => s.activeView)
   const sidebarOpen = useAppStore((s) => s.sidebarOpen)
   const rightSidebarOpen = useAppStore((s) => s.rightSidebarOpen)
+  const chromelessTabActive = useAppStore(selectChromelessBrowserTabActive)
   const rightSidebarTab = useAppStore((s) => s.rightSidebarTab)
   const rightSidebarExplorerView = useAppStore((s) => s.rightSidebarExplorerView)
   const isFullScreen = useAppStore((s) => s.isFullScreen)
@@ -80,7 +84,7 @@ export function useAppChromeLayout() {
   // Fit terminals before paint in the width-change frame to avoid transient wrong sizes.
   useLayoutEffect(() => {
     window.dispatchEvent(new CustomEvent(SYNC_FIT_PANES_EVENT))
-  }, [sidebarOpen, rightSidebarOpen])
+  }, [sidebarOpen, rightSidebarOpen, chromelessTabActive])
 
   const titlebarLeftControlsRef = useRef<HTMLDivElement | null>(null)
   const [collapsedSidebarHeaderWidth, setCollapsedSidebarHeaderWidth] = useState(0)
@@ -112,6 +116,7 @@ export function useAppChromeLayout() {
     activeView,
     activePendingCreationId,
     activeTabCanExpand,
+    chromelessTabActive,
     collapsedSidebarHeaderWidth,
     creationLayoutActive,
     hasActiveWorktree,

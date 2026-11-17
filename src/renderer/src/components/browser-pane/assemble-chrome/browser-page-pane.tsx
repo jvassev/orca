@@ -22,7 +22,6 @@ import { getOpenableExternalUrl, toDisplayUrl } from '../describe-page/browser-p
 import type { BrowserOverlayViewport } from '../describe-page/browser-annotation-geometry'
 import type { BrowserPagePaneProps } from '../describe-page/browser-page-types'
 import { BrowserPageChromeHeader } from './browser-page-chrome-header'
-import { BrowserPageContextMenu } from './context-menu/browser-page-context-menu'
 import { BrowserPageViewportOverlays } from './browser-page-viewport-overlays'
 import { useBrowserPageAnnotationSend } from '../annotate/delivery/use-browser-page-annotation-send'
 import { useBrowserPageChromeFocus } from './focus/use-browser-page-chrome-focus'
@@ -200,6 +199,7 @@ export function BrowserPagePane({
     workspaceId,
     worktreeId,
     sessionProfileId,
+    chromeless: browserTab.chromeless ?? false,
     webviewPartition,
     isActive,
     isPaintable,
@@ -319,15 +319,6 @@ export function BrowserPagePane({
       inert={!isActive}
       aria-hidden={!isActive}
     >
-      {/* IPC-driven context menu in a Portal so position:fixed escapes ancestor transform/backdrop-filter containing blocks. */}
-      <BrowserPageContextMenu
-        browserPageId={browserTab.id}
-        worktreeId={worktreeId}
-        canGoBack={browserTab.canGoBack}
-        canGoForward={browserTab.canGoForward}
-        webviewRef={webviewRef}
-        onReload={() => reload.reloadWebviewOrRecoverGuest(false)}
-      />
       <BrowserPageChromeHeader
         chromeHeaderRef={chromeHeaderRef}
         browserTab={browserTab}
@@ -393,7 +384,11 @@ export function BrowserPagePane({
             pageViewport.container
           )
         : null}
-      <BrowserPageDevToolsDock browserPageId={browserTab.id} viewport={pageViewport} />
+      <BrowserPageDevToolsDock
+        browserPageId={browserTab.id}
+        viewport={pageViewport}
+        chromeless={browserTab.chromeless}
+      />
     </div>
   )
 }

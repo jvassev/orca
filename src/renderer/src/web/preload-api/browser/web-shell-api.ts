@@ -30,6 +30,9 @@ export function createShellApi(): NonNullable<Partial<PreloadApi>['shell']> {
       Promise.resolve(window.open(path, '_blank', 'noopener,noreferrer') as never),
     openInFileManager: () => Promise.resolve(openResult),
     openInExternalEditor: () => Promise.resolve(openResult),
+    openEmbeddedVsCode: () =>
+      Promise.resolve({ ok: false, reason: 'remote-runtime-unsupported' } as const),
+    stopEmbeddedVsCode: () => Promise.resolve(),
     openUrl: (url) => Promise.resolve(window.open(url, '_blank', 'noopener,noreferrer') as never),
     openFilePath: () => Promise.resolve(false),
     openFileUri: (uri) => {

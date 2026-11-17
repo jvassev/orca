@@ -29,6 +29,7 @@ export type AttachBrowserPageWebviewArgs = {
   workspaceId: string
   worktreeId: string
   sessionProfileId: string | null
+  chromeless: boolean
   webviewPartition: string
   isActive: boolean
   isPaintable: boolean

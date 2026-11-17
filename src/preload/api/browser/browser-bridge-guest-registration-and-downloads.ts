@@ -21,6 +21,15 @@ import { readBrowserClientHostIdArgument } from '../../../shared/browser/client-
 import { browserClientPageRendererRequests } from '../../renderer/renderer-runtime'
 import type { PreloadApi } from '../../api-types'
 
+export type BrowserGuestRegistrationArgs = {
+  browserPageId: string
+  workspaceId: string
+  worktreeId: string
+  sessionProfileId?: string | null
+  webContentsId: number
+  chromeless?: boolean
+}
+
 export const browserGuestRegistrationAndDownloadsApi = {
   ...browserGuestDiscardApi,
   onClientPageRendererRequest: browserClientPageRendererRequests.subscribe,
@@ -36,13 +45,8 @@ export const browserGuestRegistrationAndDownloadsApi = {
     ipcRenderer.on('browser:guest-metadata', listener)
     return () => ipcRenderer.removeListener('browser:guest-metadata', listener)
   },
-  registerGuest: (args: {
-    browserPageId: string
-    workspaceId: string
-    worktreeId: string
-    sessionProfileId?: string | null
-    webContentsId: number
-  }): Promise<boolean> => ipcRenderer.invoke('browser:registerGuest', args),
+  registerGuest: (args: BrowserGuestRegistrationArgs): Promise<boolean> =>
+    ipcRenderer.invoke('browser:registerGuest', args),
   isGuestRegistered: (args: { browserPageId: string; webContentsId: number }): Promise<boolean> =>
     ipcRenderer.invoke('browser:isGuestRegistered', args),
   repairGuestRegistration: (args: {
@@ -51,6 +55,7 @@ export const browserGuestRegistrationAndDownloadsApi = {
     worktreeId: string
     sessionProfileId?: string | null
     webContentsId: number
+    chromeless?: boolean
   }): Promise<boolean> => ipcRenderer.invoke('browser:repairGuestRegistration', args),
   unregisterGuest: (args: {
     browserPageId: string

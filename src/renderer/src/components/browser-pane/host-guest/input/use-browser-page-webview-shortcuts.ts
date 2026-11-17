@@ -12,6 +12,7 @@ import {
 } from '../viewport/browser-page-zoom'
 import type { BrowserPageZoomCommand } from '../../../../../../shared/browser/site-settings/browser-page-zoom'
 import { addAppKeyListener, removeAppKeyListener } from '@/lib/keyboard/app-keyboard-router'
+import { addBrowserPageReloadRequestListener } from '../../navigate/browser-reload-action'
 
 /** Handle chrome chords in the renderer and guest chords through main’s IPC; focused guests own a separate WebContents. */
 export function useBrowserPageWebviewShortcuts({
@@ -122,6 +123,13 @@ export function useBrowserPageWebviewShortcuts({
       }
     })
   }, [browserTabId, isActive, reloadWebviewOrRecoverGuest])
+
+  // Not gated on isActive: a tab menu can reload a page whose tab is in the background.
+  useEffect(
+    () =>
+      addBrowserPageReloadRequestListener(browserTabId, () => reloadWebviewOrRecoverGuest(false)),
+    [browserTabId, reloadWebviewOrRecoverGuest]
+  )
 
   useEffect(() => {
     if (!isActive) {

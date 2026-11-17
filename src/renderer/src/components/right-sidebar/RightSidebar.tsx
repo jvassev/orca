@@ -18,6 +18,7 @@ import {
 import { useTranslate } from '@/i18n/use-translate'
 import { useUiLanguageRevision } from '@/i18n/use-ui-language-revision'
 import { RightSidebarPanelContent } from './right-sidebar-panel-content'
+import { selectRightSidebarShown } from './visibility/right-sidebar-visibility'
 import { useMeasuredWidth } from './layout/right-sidebar-measured-width'
 import {
   isPairedWebClientWindow,
@@ -31,6 +32,7 @@ import {
 import { RightSidebarTopActivityBar } from './activity-bar/right-sidebar-top-activity-bar'
 import { useRightSidebarActivityItems } from './activity-bar/use-right-sidebar-activity-items'
 import { useRightSidebarTabRouting } from './activity-bar/use-right-sidebar-tab-routing'
+import { EmbeddedVsCodeActionButton } from './activity-bar/EmbeddedVsCodeActionButton'
 import { useWindowWidth } from './layout/use-window-width'
 import { usePluginViewCaptureStore } from '@/store/plugins/capture/plugin-view-capture'
 import { selectWorktreeCreationSurfaceShown } from '@/lib/workspace/creation/worktree-creation-surface'
@@ -44,7 +46,7 @@ function RightSidebarInner(): React.JSX.Element {
     isWebClient: isPairedWebClientWindow()
   })
   const rightSidebarShortcut = useShortcutLabel('sidebar.right.toggle')
-  const rightSidebarOpen = useAppStore((s) => s.rightSidebarOpen)
+  const rightSidebarOpen = useAppStore(selectRightSidebarShown)
   const rightSidebarTab = useAppStore((s) => s.rightSidebarTab)
   const routeRequestId = useAppStore((s) => s.rightSidebarRouteRequestId)
   const settingsFocusRequested = useAppStore((s) => s.aiVaultSearchFocusRequested)
@@ -247,7 +249,10 @@ function RightSidebarInner(): React.JSX.Element {
             onPointerDown={contextPlugin.onPointerDown}
           >
             <div className="flex flex-col items-center w-10 min-w-[40px] bg-sidebar border-l border-border side-activity-bar-windows-inset">
-              <TooltipProvider>{sideActivityBarIcons}</TooltipProvider>
+              <TooltipProvider>
+                {sideActivityBarIcons}
+                <EmbeddedVsCodeActionButton layout="side" />
+              </TooltipProvider>
             </div>
           </ContextMenuTrigger>
           <ActivityBarPositionMenu

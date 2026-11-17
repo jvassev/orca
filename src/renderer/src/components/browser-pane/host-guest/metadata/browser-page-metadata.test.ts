@@ -122,6 +122,7 @@ function mount(state: BrowserGuestMetadata) {
     workspaceId: 'workspace-a',
     worktreeId: 'worktree-a',
     sessionProfileId: null,
+    chromeless: false,
     webviewPartition: '',
     isActive: false,
     isPaintable: false,

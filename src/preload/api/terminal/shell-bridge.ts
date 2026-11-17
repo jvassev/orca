@@ -1,6 +1,7 @@
 import type { RepoIconPickResult } from '../../../shared/repository/appearance/repo-icon-pick-failure-copy'
 import { ipcRenderer } from 'electron'
 import type {
+  ShellOpenEmbeddedVsCodeResult,
   ShellOpenExternalEditorRequest,
   ShellOpenExternalEditorResult,
   ShellOpenFileResult,
@@ -25,6 +26,15 @@ export const shellApi = {
     request: ShellOpenExternalEditorRequest
   ): Promise<ShellOpenExternalEditorResult> =>
     ipcRenderer.invoke('shell:openInExternalEditor', request),
+
+  openEmbeddedVsCode: (
+    path: string,
+    ownerHostId: ExecutionHostId
+  ): Promise<ShellOpenEmbeddedVsCodeResult> =>
+    ipcRenderer.invoke('shell:openEmbeddedVsCode', path, ownerHostId),
+
+  stopEmbeddedVsCode: (url: string): Promise<void> =>
+    ipcRenderer.invoke('shell:stopEmbeddedVsCode', url),
 
   openUrl: (url: string): Promise<void> => ipcRenderer.invoke('shell:openUrl', url),
 

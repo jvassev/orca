@@ -34,6 +34,7 @@ export function setupGuestShortcutForwarding(args: {
   getKeybindings?: () => KeybindingOverrides | undefined
   resolveWorktreeId?: (browserTabId: string) => string | null
   resolveWorkspaceId?: (browserTabId: string) => string | null
+  isChromeless?: (browserTabId: string) => boolean
   /** False for plugin frames (see GuestShortcutForwardContext). */
   browserPage?: boolean
 }): () => void {
@@ -47,6 +48,7 @@ export function setupGuestShortcutForwarding(args: {
     getKeybindings,
     resolveWorktreeId,
     resolveWorkspaceId,
+    isChromeless,
     browserPage
   } = args
   let ctrlTabSwitching = false
@@ -62,6 +64,7 @@ export function setupGuestShortcutForwarding(args: {
     getKeybindings,
     resolveWorktreeId,
     resolveWorkspaceId,
+    isChromeless,
     forwardBrowserPageZoom: (event: Electron.Event, direction: BrowserPageZoomDirection) => {
       event.preventDefault()
       resolveRenderer(browserTabId)?.send('ui:zoomBrowserPage', {

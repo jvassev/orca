@@ -52,6 +52,7 @@ export type BrowserGuestArgs = {
   worktreeId: string
   sessionProfileId?: string | null
   webContentsId: number
+  chromeless?: boolean
 }
 
 export function setAgentBrowserBridgeRef(bridge: AgentBrowserBridge | null): void {
@@ -105,7 +106,8 @@ export function registerBrowserHandlers(
     const previousWcId = browserManager.getGuestWebContentsId(args.browserPageId)
     const registered = browserManager.registerGuest({
       ...args,
-      rendererWebContentsId: event.sender.id
+      rendererWebContentsId: event.sender.id,
+      chromeless: args.chromeless
     })
     if (!registered) {
       return false
