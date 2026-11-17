@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { WorktreeOpenInMenuItems } from '@/components/sidebar/workspace-actions/open/WorktreeOpenInMenu'
-import { translate } from '@/i18n/i18n'
 import { useTranslate } from '@/i18n/use-translate'
 import { cn } from '@/lib/class-names'
 
@@ -34,16 +33,6 @@ type FileExplorerToolbarProps = {
   onToggleGitIgnoredFiles: () => void
   showDotfiles: boolean
   onToggleDotfiles: () => void
-}
-
-function formatOpenInAppLabel(appName: string): string {
-  return translate(
-    'auto.components.right.sidebar.FileExplorerToolbar.openInApp',
-    'Open in {{app}}',
-    {
-      app: appName
-    }
-  )
 }
 
 export function FileExplorerToolbar({
@@ -185,7 +174,11 @@ export function FileExplorerToolbar({
             runtimeEnvironmentId={runtimeEnvironmentId}
             ownerUnresolved={ownerUnresolved}
             workspace={workspaceId ? { workspaceId } : null}
-            formatLabel={formatOpenInAppLabel}
+            formatLabel={(appName) =>
+              t('auto.components.right.sidebar.FileExplorerToolbar.openInApp', 'Open in {{app}}', {
+                app: appName
+              })
+            }
           />
         </DropdownMenuContent>
       </DropdownMenu>

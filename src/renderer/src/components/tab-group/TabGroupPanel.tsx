@@ -32,6 +32,7 @@ import { useWindowBackdropActive } from '@/app-shell/appearance/window-backdrop'
 import { EditorRevealFlash } from './editor-reveal/EditorRevealFlash'
 import { SplitPaneLanding } from './landing/SplitPaneLanding'
 import { isSplitLandingGroup } from '@/store/slices/tabs/split-landing-groups'
+import { selectRightSidebarShown } from '@/components/right-sidebar/visibility/right-sidebar-visibility'
 
 const EditorPanel = lazy(() => import('../editor/EditorPanel'))
 const EMPTY_GROUPS: readonly TabGroup[] = []
@@ -79,7 +80,7 @@ export default function TabGroupPanel({
   hoveredTabInsertion?: HoveredTabInsertion | null
 }): React.JSX.Element {
   const t = useTranslate()
-  const rightSidebarOpen = useAppStore((state) => state.rightSidebarOpen)
+  const rightSidebarOpen = useAppStore(selectRightSidebarShown)
   const sidebarOpen = useAppStore((state) => state.sidebarOpen)
   const reserveRightTitlebarSpace = reserveClosedExplorerToggleSpace && !rightSidebarOpen
   const model = useTabGroupWorkspaceModel({ groupId, worktreeId })

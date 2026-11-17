@@ -57,6 +57,8 @@ export type CreateBrowserTabOptions = {
   browserRuntimeEnvironmentId?: string | null
   /** Creates a page that shows a workspace document instead of a URL. */
   docLocation?: BrowserPageDocLocation
+  /** Hide browser chrome (address bar, toolbar) so the guest UI fills the pane. */
+  chromeless?: boolean
 }
 
 export type CreateBrowserPageOptions = {
@@ -65,6 +67,8 @@ export type CreateBrowserPageOptions = {
   browserRuntimeEnvironmentId?: string | null
   /** Creates a page that shows a workspace document instead of a URL. */
   docLocation?: BrowserPageDocLocation
+  /** Hide browser chrome (address bar, toolbar) so the guest UI fills the pane. */
+  chromeless?: boolean
 }
 
 export type BrowserTabPageState = {

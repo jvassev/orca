@@ -2,6 +2,7 @@ import type { RepoIconPickResult } from '../../../shared/repository/appearance/r
 import type { ExecutionHostId } from '../../../shared/execution-host/execution-host'
 import type { ShellPathExistence } from '../../../shared/file-access/path-existence-batch'
 import type {
+  ShellOpenEmbeddedVsCodeResult,
   ShellOpenExternalEditorRequest,
   ShellOpenExternalEditorResult,
   ShellOpenFileResult,
@@ -19,6 +20,12 @@ export type ShellApi = {
   openInExternalEditor: (
     request: ShellOpenExternalEditorRequest
   ) => Promise<ShellOpenExternalEditorResult>
+  openEmbeddedVsCode: (
+    path: string,
+    ownerHostId: ExecutionHostId
+  ) => Promise<ShellOpenEmbeddedVsCodeResult>
+  /** Stops the serve-web server behind a closed embedded VS Code tab's URL. */
+  stopEmbeddedVsCode: (url: string) => Promise<void>
   openUrl: (url: string) => Promise<void>
   openFilePath: (
     path: string,

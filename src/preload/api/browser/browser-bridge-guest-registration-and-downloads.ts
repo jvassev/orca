@@ -20,6 +20,7 @@ import type {
 import { readBrowserClientHostIdArgument } from '../../../shared/browser/client-hosting/browser-client-host-id-argument'
 import { browserClientPageRendererRequests } from '../../renderer/renderer-runtime'
 import type { PreloadApi } from '../../api-types'
+import type { BrowserGuestRegistrationArgs } from '../../../shared/browser/guest-lifecycle/browser-guest-registration-args'
 
 export const browserGuestRegistrationAndDownloadsApi = {
   ...browserGuestDiscardApi,
@@ -36,22 +37,12 @@ export const browserGuestRegistrationAndDownloadsApi = {
     ipcRenderer.on('browser:guest-metadata', listener)
     return () => ipcRenderer.removeListener('browser:guest-metadata', listener)
   },
-  registerGuest: (args: {
-    browserPageId: string
-    workspaceId: string
-    worktreeId: string
-    sessionProfileId?: string | null
-    webContentsId: number
-  }): Promise<boolean> => ipcRenderer.invoke('browser:registerGuest', args),
+  registerGuest: (args: BrowserGuestRegistrationArgs): Promise<boolean> =>
+    ipcRenderer.invoke('browser:registerGuest', args),
   isGuestRegistered: (args: { browserPageId: string; webContentsId: number }): Promise<boolean> =>
     ipcRenderer.invoke('browser:isGuestRegistered', args),
-  repairGuestRegistration: (args: {
-    browserPageId: string
-    workspaceId: string
-    worktreeId: string
-    sessionProfileId?: string | null
-    webContentsId: number
-  }): Promise<boolean> => ipcRenderer.invoke('browser:repairGuestRegistration', args),
+  repairGuestRegistration: (args: BrowserGuestRegistrationArgs): Promise<boolean> =>
+    ipcRenderer.invoke('browser:repairGuestRegistration', args),
   unregisterGuest: (args: {
     browserPageId: string
     webContentsId?: number

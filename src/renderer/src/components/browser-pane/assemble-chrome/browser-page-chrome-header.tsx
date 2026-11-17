@@ -68,7 +68,10 @@ export function BrowserPageChromeHeader({
   isBlankTab: boolean
   resourceNotice: string | null
   setResourceNotice: Dispatch<SetStateAction<string | null>>
-}): React.JSX.Element {
+}): React.JSX.Element | null {
+  if (browserTab.chromeless) {
+    return null
+  }
   return (
     <div ref={chromeHeaderRef} className="pointer-events-auto shrink-0">
       <BrowserPageToolbar

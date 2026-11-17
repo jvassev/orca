@@ -30,6 +30,7 @@ import {
 import { useTranslate } from '@/i18n/use-translate'
 import { useUiLanguageRevision } from '@/i18n/use-ui-language-revision'
 import { RightSidebarPanelContent } from './right-sidebar-panel-content'
+import { selectRightSidebarShown } from './visibility/right-sidebar-visibility'
 import { useMeasuredWidth } from './layout/right-sidebar-measured-width'
 import { RightSidebarGutterResizeProvider } from './layout/right-sidebar-gutter-resize'
 import {
@@ -42,6 +43,7 @@ import {
   useActivityBarContextPlugin
 } from './activity-bar/activity-bar-position-menu'
 import { RightSidebarTopActivityBar } from './activity-bar/right-sidebar-top-activity-bar'
+import { EmbeddedVsCodeActionButton } from './activity-bar/EmbeddedVsCodeActionButton'
 import { cancelActivityBarFocusHandoff } from './activity-bar/activity-bar-focus-handoff'
 import { activityBarDragAnnouncements } from './activity-bar/activity-bar-drag-announcements'
 import {
@@ -65,7 +67,7 @@ function RightSidebarInner(): React.JSX.Element {
     isWebClient: isPairedWebClientWindow()
   })
   const rightSidebarShortcut = useShortcutLabel('sidebar.right.toggle')
-  const rightSidebarOpen = useAppStore((s) => s.rightSidebarOpen)
+  const rightSidebarOpen = useAppStore(selectRightSidebarShown)
   const rightSidebarTab = useAppStore((s) => s.rightSidebarTab)
   const routeRequestId = useAppStore((s) => s.rightSidebarRouteRequestId)
   const routeFocusesVaultSearch = useAppStore((s) => s.rightSidebarRouteFocusesVaultSearch)
@@ -369,6 +371,7 @@ function RightSidebarInner(): React.JSX.Element {
                   >
                     {sideActivityBarIcons}
                   </SortableContext>
+                  <EmbeddedVsCodeActionButton layout="side" />
                   {hiddenActiveItem && (
                     <TopActivityOverflowMenu
                       items={[hiddenActiveItem]}

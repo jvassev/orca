@@ -15583,6 +15583,11 @@
             "bar": {
               "buttons": {
                 "1fd284e931": "More sidebar tabs"
+              },
+              "embeddedVsCode": {
+                "open": "Embedded VS Code",
+                "tab": "VS Code",
+                "openFailed": "Could not open embedded VS Code: {{reason}}"
               }
             }
           },

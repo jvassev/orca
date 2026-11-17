@@ -44,7 +44,8 @@ export function buildBrowserPage(
   title?: string,
   browserRuntimeEnvironmentId?: string | null,
   browserPageId?: string,
-  docLocation?: BrowserPageDocLocation
+  docLocation?: BrowserPageDocLocation,
+  chromeless?: boolean
 ): BrowserPage {
   // Override grant URLs at page creation: persistence/mobile/history/address bar read this sink and cannot use another process’s expired grant.
   const normalizedUrl = docLocation ? ORCA_BROWSER_BLANK_URL : normalizeUrl(url)
@@ -62,7 +63,8 @@ export function buildBrowserPage(
     loadError: null,
     createdAt: Date.now(),
     ...(browserRuntimeEnvironmentId !== undefined ? { browserRuntimeEnvironmentId } : {}),
-    ...(docLocation ? { docLocation } : {})
+    ...(docLocation ? { docLocation } : {}),
+    ...(chromeless ? { chromeless } : {})
   }
 }
 
@@ -74,6 +76,7 @@ export function buildWorkspaceFromPage(
   sessionProfileId?: string | null,
   sessionPartition?: string | null
 ): BrowserWorkspace {
+  const chromeless = page.chromeless
   return {
     id,
     worktreeId,
@@ -89,7 +92,8 @@ export function buildWorkspaceFromPage(
     canGoForward: page.canGoForward,
     loadError: page.loadError,
     createdAt: page.createdAt,
-    docLocation: page.docLocation ?? null
+    docLocation: page.docLocation ?? null,
+    ...(chromeless ? { chromeless } : {})
   }
 }
 

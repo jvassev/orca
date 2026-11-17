@@ -1,3 +1,4 @@
+import type { BrowserGuestRegistrationArgs } from '../../../shared/browser/guest-lifecycle/browser-guest-registration-args'
 import type { BrowserGuestMetadata } from '../../../shared/browser/guest-lifecycle/browser-guest-metadata'
 import type { BrowserSessionCookieApi } from './browser-session-cookie-api'
 import type { BrowserGuestDiscardApi } from '../../../shared/browser/guest-lifecycle/browser-guest-discard-protection'
@@ -95,13 +96,7 @@ export type BrowserApi = {
     webContentsId: number
   }) => Promise<BrowserGuestMetadata | null | undefined>
   onGuestMetadata: (callback: (state: BrowserGuestMetadata) => void) => () => void
-  registerGuest: (args: {
-    browserPageId: string
-    workspaceId: string
-    worktreeId: string
-    sessionProfileId?: string | null
-    webContentsId: number
-  }) => Promise<boolean>
+  registerGuest: (args: BrowserGuestRegistrationArgs) => Promise<boolean>
   isGuestRegistered: (args: { browserPageId: string; webContentsId: number }) => Promise<boolean>
   repairGuestRegistration: BrowserApi['registerGuest']
   unregisterGuest: (args: {

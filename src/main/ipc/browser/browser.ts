@@ -7,6 +7,7 @@ import {
 import type { AgentBrowserBridge } from '../../browser/agent-browser/agent-browser-bridge'
 import { isWorkspaceDocPageId } from '../../browser/document-preview/doc-preview-guest-policy'
 import { isTrustedBrowserRenderer } from './browser-renderer-trust'
+import type { BrowserGuestRegistrationArgs as BrowserGuestArgs } from '../../../shared/browser/guest-lifecycle/browser-guest-registration-args'
 import {
   isLiveBrowserWebContentsId,
   resolveTabRegistrationWaiters
@@ -46,14 +47,6 @@ import {
 } from './browser-passwords-ipc'
 
 let agentBrowserBridgeRef: AgentBrowserBridge | null = null
-
-export type BrowserGuestArgs = {
-  browserPageId: string
-  workspaceId: string
-  worktreeId: string
-  sessionProfileId?: string | null
-  webContentsId: number
-}
 
 export function setAgentBrowserBridgeRef(bridge: AgentBrowserBridge | null): void {
   agentBrowserBridgeRef = bridge

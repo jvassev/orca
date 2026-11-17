@@ -10,14 +10,20 @@ export function setupGrabShortcutForwarding(args: {
   resolveRenderer: ResolveRenderer
   hasActiveGrabOp: (browserTabId: string) => boolean
   getKeybindings?: () => KeybindingOverrides | undefined
+  isChromeless?: (browserTabId: string) => boolean
 }): () => void {
-  const { browserTabId, guest, resolveRenderer, hasActiveGrabOp, getKeybindings } = args
+  const { browserTabId, guest, resolveRenderer, hasActiveGrabOp, getKeybindings, isChromeless } =
+    args
   const handler = (event: Electron.Event, input: Electron.Input): void => {
     // Agent-injected keys must not trigger Orca actions (#20595).
     if (isAgentInjectingInput(guest)) {
       return
     }
     if (input.type !== 'keyDown') {
+      return
+    }
+    // Chromeless guests (e.g. embedded VS Code) own Mod+C so it stays a text copy.
+    if (isChromeless?.(browserTabId) === true) {
       return
     }
     const bareKey = input.key.toLowerCase()

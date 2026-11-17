@@ -19,6 +19,7 @@ import {
   RIGHT_SIDEBAR_TOP_ACTIVITY_STRIP_CLASS_NAME,
   RIGHT_SIDEBAR_WINDOWS_TOP_ACTIVITY_STRIP_CLASS_NAME
 } from '../layout/right-sidebar-titlebar-drag-regions'
+import { EmbeddedVsCodeActionButton } from './EmbeddedVsCodeActionButton'
 
 export function RightSidebarTopActivityBar({
   hasDesktopWindowChrome,
@@ -102,6 +103,7 @@ export function RightSidebarTopActivityBar({
                   {/* Use More for overflow because this narrow titlebar also holds close/window controls. */}
                   <div className={cn('flex min-w-0 shrink items-center', pillGap)}>{tabs}</div>
                   {overflowMenu}
+                  <EmbeddedVsCodeActionButton layout="top" />
                 </div>
               </div>
             </ContextMenuTrigger>
@@ -142,6 +144,7 @@ export function RightSidebarTopActivityBar({
               {/* Keep navigation in the body so custom desktop titlebars remain visually native and uncrowded. */}
               <div className={cn('flex min-w-0 flex-1 shrink items-center', pillGap)}>{tabs}</div>
               {overflowMenu}
+              <EmbeddedVsCodeActionButton layout="top" />
             </div>
           </ContextMenuTrigger>
         </TooltipProvider>

@@ -35,7 +35,8 @@ export abstract class BrowserManagerBindings extends BrowserManagerGrab {
         resolveRenderer: (tabId) =>
           resolveRendererWebContents(this.rendererWebContentsIdByTabId, tabId),
         hasActiveGrabOp: (tabId) => this.hasActiveGrabOp(tabId),
-        getKeybindings: () => this.settingsResolver?.().keybindings
+        getKeybindings: () => this.settingsResolver?.().keybindings,
+        isChromeless: (tabId) => this.chromelessByPageId.get(tabId) ?? false
       })
     )
   }
@@ -59,7 +60,8 @@ export abstract class BrowserManagerBindings extends BrowserManagerGrab {
         isMobileEmulatorEnabled: () => this.settingsResolver?.().mobileEmulatorEnabled !== false,
         getKeybindings: () => this.settingsResolver?.().keybindings,
         resolveWorktreeId: (tabId) => this.worktreeIdByTabId.get(tabId) ?? null,
-        resolveWorkspaceId: (tabId) => this.workspaceIdByPageId.get(tabId) ?? null
+        resolveWorkspaceId: (tabId) => this.workspaceIdByPageId.get(tabId) ?? null,
+        isChromeless: (tabId) => this.chromelessByPageId.get(tabId) ?? false
       })
     )
   }

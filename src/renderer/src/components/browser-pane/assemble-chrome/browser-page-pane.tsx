@@ -201,6 +201,7 @@ export function BrowserPagePane({
     workspaceId,
     worktreeId,
     sessionProfileId,
+    chromeless: browserTab.chromeless ?? false,
     webviewPartition,
     isActive,
     isPaintable,
@@ -322,15 +323,17 @@ export function BrowserPagePane({
       aria-hidden={!isActive}
     >
       {/* IPC-driven context menu in a Portal so position:fixed escapes ancestor transform/backdrop-filter containing blocks. */}
-      <BrowserPageContextMenu
-        browserPageId={browserTab.id}
-        worktreeId={worktreeId}
-        canGoBack={browserTab.canGoBack}
-        canGoForward={browserTab.canGoForward}
-        webviewRef={webviewRef}
-        onReload={() => reload.reloadWebviewOrRecoverGuest(false)}
-        externalUrl={sshRoutedExternalUrl}
-      />
+      {browserTab.chromeless ? null : (
+        <BrowserPageContextMenu
+          browserPageId={browserTab.id}
+          worktreeId={worktreeId}
+          canGoBack={browserTab.canGoBack}
+          canGoForward={browserTab.canGoForward}
+          webviewRef={webviewRef}
+          onReload={() => reload.reloadWebviewOrRecoverGuest(false)}
+          externalUrl={sshRoutedExternalUrl}
+        />
+      )}
       <BrowserPageChromeHeader
         chromeHeaderRef={chromeHeaderRef}
         browserTab={browserTab}
@@ -397,7 +400,11 @@ export function BrowserPagePane({
             pageViewport.container
           )
         : null}
-      <BrowserPageDevToolsDock browserPageId={browserTab.id} viewport={pageViewport} />
+      <BrowserPageDevToolsDock
+        browserPageId={browserTab.id}
+        viewport={pageViewport}
+        chromeless={browserTab.chromeless}
+      />
     </div>
   )
 }

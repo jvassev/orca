@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
-import { CopyX, Files, X, Pin, PinOff, Volume2, VolumeX } from 'lucide-react'
+import { CopyX, Files, X, Pin, PinOff, RefreshCw, Volume2, VolumeX } from 'lucide-react'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -13,6 +13,7 @@ import '../../../../../shared/orca-profiles/constants'
 import { redactKagiSessionToken } from '../../../../../shared/browser/navigation/browser-url'
 import type { BrowserWorkspace } from '../../../../../shared/browser/workspaces/browser-workspace-types'
 import { CLOSE_ALL_CONTEXT_MENUS_EVENT } from '@/lib/overlay-interaction/close-all-context-menus'
+import { requestBrowserPageReload } from '../../browser-pane/navigate/browser-reload-action'
 import type { TabDragItemData } from '../../tab-group/drag/tab-drag-data'
 import {
   ACTIVE_TAB_INDICATOR_CLASSES,
@@ -257,6 +258,13 @@ export default function BrowserTab({
           groupId={dragData.groupId}
           trailingSeparator
         />
+        {tab.chromeless ? (
+          // Why: chromeless tabs (embedded VS Code) have no reload button and leave Mod+R to the page.
+          <ContextMenuItem onSelect={() => requestBrowserPageReload(tab.activePageId ?? tab.id)}>
+            <RefreshCw className="size-3.5" />
+            {t('browser.navigation.reload', 'Reload')}
+          </ContextMenuItem>
+        ) : null}
         {onDuplicate ? (
           <>
             <ContextMenuItem onSelect={onDuplicate}>

@@ -24,12 +24,14 @@ import {
   beginDesktopCoreShutdown,
   fenceDesktopCore
 } from '../../core-desktop/desktop-core-shutdown'
+import { stopAllVsCodeServeWeb } from '../../external-editors/vscode-serve-web'
 
 // First will-quit pass awaits teardown; the re-fired pass must exit without starting writes again.
 let daemonDisconnectDone = false
 
 function installBeforeQuitHandler(): void {
   app.on('before-quit', (event: Event) => {
+    stopAllVsCodeServeWeb()
     if (event.defaultPrevented) {
       return
     }

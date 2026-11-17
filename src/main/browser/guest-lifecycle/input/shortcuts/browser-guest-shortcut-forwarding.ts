@@ -34,6 +34,7 @@ export function setupGuestShortcutForwarding(args: {
   getKeybindings?: () => KeybindingOverrides | undefined
   resolveWorktreeId?: (browserTabId: string) => string | null
   resolveWorkspaceId?: (browserTabId: string) => string | null
+  isChromeless?: (browserTabId: string) => boolean
   /** False for plugin frames (see GuestShortcutForwardContext). */
   browserPage?: boolean
 }): () => void {
@@ -47,6 +48,7 @@ export function setupGuestShortcutForwarding(args: {
     getKeybindings,
     resolveWorktreeId,
     resolveWorkspaceId,
+    isChromeless,
     browserPage
   } = args
   let ctrlTabSwitching = false
@@ -91,6 +93,10 @@ export function setupGuestShortcutForwarding(args: {
       return
     }
     const { browserTabId } = forwardContext
+    // Chromeless guests (embedded VS Code) own every key; their tab menu has Reload.
+    if (isChromeless?.(browserTabId)) {
+      return
+    }
     const keybindings = getKeybindings?.()
     if (
       input.type === 'keyDown' &&
