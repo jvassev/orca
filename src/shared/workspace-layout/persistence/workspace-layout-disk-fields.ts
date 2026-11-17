@@ -217,7 +217,8 @@ const BROWSER = {
   canGoBack: own('browserLive', 'canGoBack'),
   canGoForward: own('browserLive', 'canGoForward'),
   loadError: own('browserLive', 'loadError'),
-  docLocation: own('browserLive', 'docLocation')
+  docLocation: own('browserLive', 'docLocation'),
+  chromeless: own('browserLive', 'chromeless')
 } as const satisfies Record<keyof BrowserWorkspace, DiskFieldWritten>
 
 // Write records only for mounted tree panes; derive keys from tab and leaf IDs.

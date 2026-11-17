@@ -45,3 +45,16 @@ export type ShellOpenExternalEditorResult =
  * because it is a script or launcher that is readable text; the caller shows it in Orca instead.
  */
 export type ShellOpenFileResult = 'opened' | 'revealed' | 'open-in-editor' | 'failed'
+
+export type ShellOpenEmbeddedVsCodeResult =
+  | { ok: true; url: string }
+  | {
+      ok: false
+      reason:
+        | 'not-installed'
+        | 'launch-failed'
+        | 'timeout'
+        | 'remote-runtime-unsupported'
+        | 'not-absolute'
+        | 'not-found'
+    }

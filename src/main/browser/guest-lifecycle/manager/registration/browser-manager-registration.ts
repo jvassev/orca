@@ -8,6 +8,7 @@ import { webContents } from 'electron'
 import { browserDownloadDestinationReservations } from '../../../downloads/browser-download-destination'
 import { isWorkspaceDocPageId } from '../../../document-preview/doc-preview-guest-policy'
 import { BrowserManagerGuestPolicy } from './browser-manager-guest-policy'
+import { bindEmbeddedVsCodeGuestRecovery } from '../../../../external-editors/embedded-vscode-guest-recovery'
 import {
   cancelBrowserPagePrompts,
   showBrowserPagePromptsAwaitingRegistration
@@ -21,6 +22,7 @@ export type BrowserGuestRegistration = {
   sessionProfileId?: string | null
   webContentsId: number
   rendererWebContentsId: number
+  chromeless?: boolean
 }
 
 export abstract class BrowserManagerRegistration extends BrowserManagerGuestPolicy {
@@ -32,7 +34,8 @@ export abstract class BrowserManagerRegistration extends BrowserManagerGuestPoli
       worktreeId,
       sessionProfileId,
       webContentsId,
-      rendererWebContentsId
+      rendererWebContentsId,
+      chromeless
     }: BrowserGuestRegistration,
     options?: { retainPreviousGuestPolicies?: boolean }
   ): boolean {
@@ -91,6 +94,10 @@ export abstract class BrowserManagerRegistration extends BrowserManagerGuestPoli
     )
     if (worktreeId) {
       this.worktreeIdByTabId.set(browserTabId, worktreeId)
+    }
+    this.chromelessByPageId.set(browserTabId, Boolean(chromeless))
+    if (chromeless) {
+      bindEmbeddedVsCodeGuestRecovery(guest)
     }
     this.certificateTrustController?.onGuestRegistered(webContentsId, browserTabId)
     this.siteDisplayController?.onGuestRegistered(guest, sessionProfileId ?? null)
@@ -173,6 +180,7 @@ export abstract class BrowserManagerRegistration extends BrowserManagerGuestPoli
           this.rendererWebContentsIdByTabId.delete(browserTabId)
         }
         this.workspaceIdByPageId.delete(browserTabId)
+        this.chromelessByPageId.delete(browserTabId)
         this.sessionProfileIdByPageId.delete(browserTabId)
         this.worktreeIdByTabId.delete(browserTabId)
         this.viewportOpsByTabId.delete(browserTabId)

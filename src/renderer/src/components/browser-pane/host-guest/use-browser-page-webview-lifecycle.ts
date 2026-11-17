@@ -38,6 +38,7 @@ export function useBrowserPageWebviewLifecycle({
   workspaceId,
   worktreeId,
   sessionProfileId,
+  chromeless,
   webviewPartition,
   isActive,
   isPaintable,
@@ -77,6 +78,7 @@ export function useBrowserPageWebviewLifecycle({
   workspaceId: string
   worktreeId: string
   sessionProfileId: string | null
+  chromeless: boolean
   webviewPartition: string
   isActive: boolean
   isPaintable: boolean
@@ -210,6 +212,7 @@ export function useBrowserPageWebviewLifecycle({
       workspaceId,
       worktreeId,
       sessionProfileId,
+      chromeless,
       webviewPartition,
       isActive,
       isPaintable,

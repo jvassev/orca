@@ -54,7 +54,8 @@ export function createBrowserTabActions(
         options?.title,
         options?.browserRuntimeEnvironmentId,
         browserPageId,
-        options?.docLocation
+        options?.docLocation,
+        options?.chromeless
       )
       if (
         !options?.browserRuntimeEnvironmentId &&

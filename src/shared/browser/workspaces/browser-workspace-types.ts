@@ -107,6 +107,8 @@ export type BrowserPage = {
   convertedFrom?: BrowserPageConversionOrigin | null
   /** Set on a page Back returned across a conversion to; Forward re-crosses it. */
   convertedTo?: BrowserPageConversionOrigin | null
+  /** Hide browser chrome (address bar, toolbar) so the guest UI fills the pane. */
+  chromeless?: boolean
 }
 
 export type BrowserWorkspace = {
@@ -131,6 +133,8 @@ export type BrowserWorkspace = {
   createdAt: number
   /** Mirrored from the active page, like the fields above it. */
   docLocation?: BrowserPageDocLocation | null
+  /** Hide browser chrome (address bar, toolbar) so the guest UI fills the pane. */
+  chromeless?: boolean
 }
 
 export type BrowserSessionProfileScope = 'default' | 'isolated' | 'imported'

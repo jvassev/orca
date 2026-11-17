@@ -90,6 +90,7 @@ function createSession(
     workspaceId: 'browser-1',
     worktreeId: 'wt-1',
     sessionProfileId: null,
+    chromeless: false,
     webviewRef,
     isPaintableRef: paintable,
     guestRecoveryPendingRef: pending,

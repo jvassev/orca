@@ -130,10 +130,12 @@ export function BrowserDevToolsDock({
 /** Docks DevTools into a local page's DOM-built viewport, which React doesn't render. */
 export function BrowserPageDevToolsDock({
   browserPageId,
-  viewport
+  viewport,
+  chromeless
 }: {
   browserPageId: string
   viewport: { container: HTMLDivElement; devToolsSplit: HTMLDivElement } | null
+  chromeless?: boolean
 }): React.JSX.Element | null {
   const pageFlex = useBrowserDevToolsDockPageFlex(browserPageId)
   const container = viewport?.container ?? null
@@ -142,7 +144,8 @@ export function BrowserPageDevToolsDock({
       container.style.flex = pageFlex ?? ''
     }
   }, [container, pageFlex])
-  return viewport && pageFlex !== null
-    ? createPortal(<BrowserDevToolsDock browserPageId={browserPageId} />, viewport.devToolsSplit)
-    : null
+  if (chromeless || !viewport || pageFlex === null) {
+    return null
+  }
+  return createPortal(<BrowserDevToolsDock browserPageId={browserPageId} />, viewport.devToolsSplit)
 }

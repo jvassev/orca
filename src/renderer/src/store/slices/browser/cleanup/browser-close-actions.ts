@@ -38,6 +38,7 @@ export function createBrowserCloseActions(
         // Collect grants outside reducer: revocation is main work and closed docs must become unreadable even if reduction bails.
         let docPageIdsToRelease: string[] = []
         let activeBrowserWorktreeIdToNotify: string | null = null
+        let closedEmbeddedVsCodeUrl: string | null = null
         set((current) => {
           const s = drawn ? withDrawnBrowserPages(current, drawn) : current
           // Main's frame already dropped a drawn tab's record.
@@ -58,6 +59,7 @@ export function createBrowserCloseActions(
           if (!owningWorktreeId || !closedWorkspace) {
             return current
           }
+          closedEmbeddedVsCodeUrl = closedWorkspace.chromeless ? closedWorkspace.url : null
 
           const closedPages = s.browserPagesByWorkspace[tabId] ?? []
           const nextBrowserPagesByWorkspace = { ...s.browserPagesByWorkspace }
@@ -201,6 +203,11 @@ export function createBrowserCloseActions(
 
         for (const docPageId of docPageIdsToRelease) {
           releaseDocPreviewGrant(docPageId)
+        }
+
+        // Stop on close itself: a closed tab's guest is not always destroyed, which the idle sweep relies on.
+        if (closedEmbeddedVsCodeUrl) {
+          window.api?.shell?.stopEmbeddedVsCode?.(closedEmbeddedVsCodeUrl).catch(() => {})
         }
 
         // Main's frame already dropped a drawn tab's entry.
