@@ -16,6 +16,7 @@ export function useContextualCopySetup() {
       propsRef: React.MutableRefObject<{
         relativePath: string
         language: string
+        worktreeId?: string
         onSave?: (content: string) => void
       }>
     ) => {

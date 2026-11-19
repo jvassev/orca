@@ -124,10 +124,11 @@ export default function DiffViewer({
   }, [scrollToDiffCommentId, diffComments, worktreeId])
 
   // A draft keeps its captured owner across a same-tab rename but saves under the file's current path.
-  const propsRef = useRef({ relativePath, language, onSave, originalContent, modifiedContent })
+  const latest = { relativePath, language, worktreeId, onSave, originalContent, modifiedContent }
+  const propsRef = useRef(latest)
   useLayoutEffect(() => {
-    propsRef.current = { relativePath, language, onSave, originalContent, modifiedContent }
-  }, [relativePath, language, onSave, originalContent, modifiedContent])
+    propsRef.current = latest
+  })
   const handleCreateComment = useCallback(
     async ({
       lineNumber,
