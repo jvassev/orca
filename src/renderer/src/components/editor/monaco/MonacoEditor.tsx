@@ -104,9 +104,9 @@ export default function MonacoEditor({
   const { setupCopy, toastNode } = useContextualCopySetup()
   // Cancel pending throttled writes before snapshotting final scroll on unmount.
   const scrollThrottleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const propsRef = useRef({ relativePath, language, onSave, onContentChange })
+  const propsRef = useRef({ relativePath, language, worktreeId, onSave, onContentChange })
   // Refresh during render so event handlers cannot read one-render-stale props.
-  propsRef.current = { relativePath, language, onSave, onContentChange }
+  propsRef.current = { relativePath, language, worktreeId, onSave, onContentChange }
   const readOnlyRef = useRef(readOnly)
   readOnlyRef.current = readOnly
   const contentSyncModeRef = useRef<MonacoContentSyncMode>('undoable')

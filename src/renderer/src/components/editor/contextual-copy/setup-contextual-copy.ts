@@ -3,6 +3,7 @@ import { formatShortcutLabel } from '@/lib/keyboard/useShortcutLabel'
 import { monaco } from '@/lib/editor/monaco/monaco-setup'
 import { useAppStore } from '@/store/index'
 import { editorShortcutMatches } from '../commands/editor-shortcuts'
+import { installAddSelectionToLastAgentShortcut } from './editor-selection-quote'
 import {
   canCopySelectionWithContext,
   formatCopiedSelectionWithContext,
@@ -29,6 +30,7 @@ export function setupContextualCopy({
   propsRef: React.MutableRefObject<{
     relativePath: string
     language: string
+    worktreeId?: string
     onSave?: (content: string) => void
   }>
   copyToastTimeoutRef: React.MutableRefObject<number | null>
@@ -40,13 +42,22 @@ export function setupContextualCopy({
   copyHintNode.className =
     'pointer-events-none rounded-md border border-border/90 bg-background px-2.5 py-1 text-xs font-medium text-foreground shadow-[0_6px_18px_rgba(15,23,42,0.18)] backdrop-blur whitespace-nowrap'
   const updateCopyHintLabel = (): void => {
-    copyHintNode.textContent = translate(
+    const { keybindings } = useAppStore.getState()
+    const copyHint = translate(
       'auto.components.editor.contextualCopy.copyContextHint',
       'Copy context {{shortcut}}',
-      {
-        shortcut: formatShortcutLabel('editor.copyContext', useAppStore.getState().keybindings)
-      }
+      { shortcut: formatShortcutLabel('editor.copyContext', keybindings) }
     )
+    if (!propsRef.current.worktreeId) {
+      copyHintNode.textContent = copyHint
+      return
+    }
+    const agentHint = translate(
+      'auto.components.editor.contextualCopy.addToLastAgentHint',
+      'Add to agent {{shortcut}}',
+      { shortcut: formatShortcutLabel('editor.addSelectionToLastAgent', keybindings) }
+    )
+    copyHintNode.textContent = `${copyHint} · ${agentHint}`
   }
   updateCopyHintLabel()
   copyHintNode.style.display = 'none'
@@ -272,6 +283,10 @@ export function setupContextualCopy({
     void copySelectionWithContext()
   }
   editorDomNode.addEventListener('keydown', handleKeyDown, true)
+  const cleanupAddToLastAgentShortcut = installAddSelectionToLastAgentShortcut(
+    editorInstance,
+    propsRef
+  )
   editorDomNode.addEventListener('mouseup', refreshCopyHint, true)
   editorDomNode.addEventListener('keyup', refreshCopyHint, true)
   editorInstance.onDidDispose(() => {
@@ -291,6 +306,7 @@ export function setupContextualCopy({
       primarySelectionTimer = null
     }
     editorDomNode.removeEventListener('keydown', handleKeyDown, true)
+    cleanupAddToLastAgentShortcut()
     editorDomNode.removeEventListener('mouseup', refreshCopyHint, true)
     editorDomNode.removeEventListener('keyup', refreshCopyHint, true)
     editorInstance.removeContentWidget(copyHintWidget)

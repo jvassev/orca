@@ -227,8 +227,8 @@ export default function DiffViewer({
 
   const { setupCopy, toastNode } = useContextualCopySetup()
 
-  const propsRef = useRef({ relativePath, language, onSave })
-  propsRef.current = { relativePath, language, onSave }
+  const propsRef = useRef({ relativePath, language, worktreeId, onSave })
+  propsRef.current = { relativePath, language, worktreeId, onSave }
   const currentDiffModelPaths = useDiffViewerLargeDiffLifecycle({
     limited: renderLimit.limited,
     modelKey,
