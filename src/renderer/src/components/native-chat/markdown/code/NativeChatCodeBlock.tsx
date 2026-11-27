@@ -25,11 +25,12 @@ export function NativeChatCodeBlock({
   const code = extractCodeText(children)
   const rowKey = useContext(NativeChatMarkdownRowKeyContext)
   // Keep wrap state in the transcript store so windowing and streaming block recuts cannot reset it; never persist it.
+  // A one-line block (usually a command) wraps by default so it reads without scrolling.
   const { open: wrapped, setOpen: setWrapped } = useNativeChatDisclosure(
     rowKey === undefined || sourceLine === undefined
       ? undefined
       : `code-wrap:${rowKey}:${sourceLine}`,
-    false
+    !code.trimEnd().includes('\n')
   )
   const actions = code ? (
     <>
